@@ -1,3 +1,5 @@
+def crear_circulo():
+  print("vas a crear un increible circulo")
 while True:
   try:
     opcion= int(input("ingrese una opcion\n1.Circulo\n2.Cuadrado\n3.Rectangulo\n4.Triangulo\n5.Finalizar programa\n"))
@@ -5,7 +7,7 @@ while True:
      break
     match opcion:
       case 1:
-         print("vas a hacer un circulo")
+            crear_circulo()
       case 2:
          print("vas a hacer un cuadrado")
       case 3:

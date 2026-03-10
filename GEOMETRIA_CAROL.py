@@ -22,7 +22,7 @@ def hacer_cuadrado(lado,color):
    y = [0,0, lado, lado,0]
    # Crear la figura
    plt.figure()
-   plt.plot(x, y, marker='o') # 'o' añade puntos en los vértices
+   plt.plot(x, y, marker='o',color=color) # 'o' añade puntos en los vértices
    # Asegurar que los ejes tengan la misma escala
    plt.axis('equal')
    # Añadir etiquetas y mostrar
@@ -133,7 +133,9 @@ while True:
          color=(input("Ingrese el color del circulo"))
          hacer_circulo(radio,color)
       case 2:
-         hacer_cuadrado()
+         lado=float(input("Ingrese el lado del cuadrado: "))
+         color=(input("Ingrese el color del cuadrado"))
+         hacer_cuadrado(lado,color)
       case 3:
           hacer_pentagono
       case 4:

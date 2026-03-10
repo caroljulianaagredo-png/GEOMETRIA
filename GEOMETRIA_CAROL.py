@@ -3,114 +3,162 @@ from matplotlib.patches import Circle
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-def hacer_circulo(radio, color):
-   print("vas a hacer un circulo")
+def area_circulo(radio):
+   area = np.pi * radio**2
+   return area
+
+def hacer_circulo(radio, x_centro, y_centro, unidad, color):
+   area = area_circulo(radio)
    fig, ax = plt.subplots()
-   # Crear el círculo: (centro_x, centro_y), radio
-   circulo = Circle((0.5, 0.5), radio, color=color, fill=True)
-   # Añadir el círculo a los ejes
+   circulo = Circle(
+       (x_centro, y_centro),
+       radio,
+       color=color,
+       fill=True,
+       label=f"Área = {area:.1f} {unidad}²")
    ax.add_patch(circulo)
-   # Asegurar que el círculo no se deforme (aspecto 1:1)
    ax.set_aspect('equal')
-   # Ajustar límites de los ejes para ver el círculo
-   ax.set_xlim(-radio, radio)
-   ax.set_ylim(-radio, radio)
+   ax.set_xlim(x_centro - radio*1.5, x_centro + radio*1.5)
+   ax.set_ylim(y_centro - radio*1.5, y_centro + radio*1.5)
+   ax.set_xlabel(f'X ({unidad})')
+   ax.set_ylabel(f'Y ({unidad})')
+   ax.legend()   
    plt.show()
-def hacer_cuadrado(lado,color):
-   print("vas a hacer un cuadrado")
-   x = [0,lado,lado,0,0]
-   y = [0,0, lado, lado,0]
-   # Crear la figura
-   plt.figure()
-   plt.plot(x, y, marker='o',color=color) # 'o' añade puntos en los vértices
-   # Asegurar que los ejes tengan la misma escala
-   plt.axis('equal')
-   # Añadir etiquetas y mostrar
-   plt.title("Cuadrado en Matplotlib")
-   plt.grid(True)
-   plt.show()
-def hacer_pentagono():
-   print("vas a hacer un pentagono")
-   # Definir los ángulos para los 5 vértices (0, 72, 144, 216, 288 grados)
-   theta = np.linspace(0, 2*np.pi, 6)
-   r = 1 # Radio del pentágono
-   # Calcular coordenadas x e y
-   x = r * np.cos(theta)
-   y = r * np.sin(theta)
-   # Crear la figura
+def area_cuadrado(lado):
+    return lado**2
+def perimetro_cuadrado(lado):
+    return 4 * lado
+
+def hacer_cuadrado(lado,x_ini, y_ini, unidad, color):
+   area = area_cuadrado(lado)
+   perimetro = perimetro_cuadrado(lado)
+   x = [x_ini, x_ini+lado, x_ini+lado, x_ini, x_ini]
+   y = [y_ini, y_ini, y_ini+lado, y_ini+lado, y_ini]
+
    fig, ax = plt.subplots()
-   # Opción 1: Dibujar usando plot
-   ax.plot(x, y, marker='o', linestyle='-')
-   # Opción 2: Rellenar usando Polygon (más formal)
-   # pentagon = Polygon(np.column_stack((x, y)), closed=True, alpha=0.3)
-   # ax.add_patch(pentagon)
-   # Ajustes de visualización
-   ax.set_aspect('equal') # Asegura que el pentágono no sea elíptico
+   ax.plot(
+       x, y,
+       marker='o',
+       color=color,
+       label=f"Area={area:.1f} {unidad}²\nPerimetro={perimetro:.1f} {unidad}")
+   ax.set_aspect('equal')
+   ax.set_xlabel(f"X ({unidad})")
+   ax.set_ylabel(f"Y ({unidad})")
+   ax.legend()
    plt.grid(True)
    plt.show()
-def hacer_rectangulo3d():
-   print("vas a hacer un rectangulo")
-   # Crear figura
-   fig = plt.figure()
-   ax = fig.add_subplot(111, projection='3d')
-   # Definir dimensiones del rectángulo
-   x = [0, 5, 5, 0, 0]
-   y = [0, 0, 3, 3, 0]
-   z = [0, 0, 0, 0, 0] # Cara inferior
-   # Graficar la cara base (plana, se puede extruir)
-   ax.plot_trisurf(x, y, z, color='blue', alpha=0.5)
-   # Añadir etiquetas
-   ax.set_xlabel('Eje X')
-   ax.set_ylabel('Eje Y')
-   ax.set_zlabel('Eje Z')
+def area_pentagono(lado):
+    return (5 * lado**2) / (4 * np.tan(np.pi/5))
+def perimetro_pentagono(lado):
+    return 5 * lado
+
+def hacer_pentagono(lado, x_centro, y_centro, unidad, color):
+
+   area = area_pentagono(lado)
+   perimetro = perimetro_pentagono(lado)
+
+   theta = np.linspace(0, 2*np.pi, 6)
+
+   x = x_centro + lado * np.cos(theta)
+   y = y_centro + lado * np.sin(theta)
+
+   fig, ax = plt.subplots()
+   ax.plot(
+       x, y,
+       marker='o',
+       linestyle='-',
+       color=color,
+       label=f"Area={area:.1f} {unidad}²\nPerimetro={perimetro:.1f} {unidad}")
+   ax.set_aspect('equal')
+   ax.set_xlabel(f"X ({unidad})")
+   ax.set_ylabel(f"Y ({unidad})")
+   ax.legend()
+   plt.grid(True)
    plt.show()
-def hacer_triangulo3d():
-   print("vas a hacer un triangulo")
+def perimetro_rectangulo(base, altura):
+    return 2 * (base + altura)
+def diagonal_rectangulo(base, altura):
+    return np.sqrt(base**2 + altura**2)
+
+def hacer_rectangulo3d(base, altura, x_ini, y_ini, unidad, color):
+   perimetro = perimetro_rectangulo(base, altura)
+   diagonal = diagonal_rectangulo(base, altura)
+
    fig = plt.figure()
    ax = fig.add_subplot(111, projection='3d')
-   # Definir los tres vértices del triángulo (x, y, z)
-   v1 = [0, 0, 0]
-   v2 = [1, 0, 0]
-   v3 = [0, 1, 1]
-   # Agrupar los vértices
-   verts = [v1, v2, v3]
-   # Crear el polígono
-   triangulo = Poly3DCollection([verts])
-   triangulo.set_color('cyan')
-   triangulo.set_edgecolor('black')
-   triangulo.set_alpha(0.5)
-   # Añadir el triángulo al eje
-   ax.add_collection3d(triangulo)
-   # Configurar límites y mostrar
-   ax.set_xlim(0, 1)
-   ax.set_ylim(0, 1)
-   ax.set_zlim(0, 1)
+
+   x = [x_ini, x_ini+base, x_ini+base, x_ini, x_ini]
+   y = [y_ini, y_ini, y_ini+altura, y_ini+altura, y_ini]
+   z = [0,0,0,0,0]
+
+   ax.plot(x, y, z, color=color,
+           label=f"Perimetro={perimetro:.1f} {unidad}\nDiagonal={diagonal:.1f} {unidad}")
+   ax.set_xlabel(f"X ({unidad})")
+   ax.set_ylabel(f"Y ({unidad})")
+   ax.set_zlabel(f"Z ({unidad})")
+   ax.legend()
    plt.show()
-def hacer_estrella3d():
-   print("vas a hacer una estrella")
+def area_triangulo(base, altura):
+    return (base * altura) / 2
+def hipotenusa_triangulo(base, altura):
+    return np.sqrt(base**2 + altura**2)
+
+def hacer_triangulo3d(base, altura, x_ini, y_ini, unidad, color):
+
+   area = area_triangulo(base, altura)
+   hipotenusa = hipotenusa_triangulo(base, altura)
+
    fig = plt.figure()
    ax = fig.add_subplot(111, projection='3d')
-   # Definir los vértices de una estrella 2D (radio interno y externo)
-   r_in = 0.5
-   r_out = 1.0
+
+   v1 = [x_ini, y_ini, 0]
+   v2 = [x_ini + base, y_ini, 0]
+   v3 = [x_ini, y_ini + altura, altura]
+
+   x = [v1[0], v2[0], v3[0], v1[0]]
+   y = [v1[1], v2[1], v3[1], v1[1]]
+   z = [v1[2], v2[2], v3[2], v1[2]]
+
+   ax.plot(x, y, z, color=color,
+           label=f"Area={area:.1f} {unidad}²\nHipotenusa={hipotenusa:.1f} {unidad}")
+   ax.set_xlabel(f"X ({unidad})")
+   ax.set_ylabel(f"Y ({unidad})")
+   ax.set_zlabel(f"Z ({unidad})")
+   ax.legend()
+   plt.show()
+def perimetro_estrella(lado):
+    return 10 * lado
+def area_estrella(radio):
+    return (5 * radio**2 * np.sin(2*np.pi/5)) / 2
+def hacer_estrella3d(radio, x_centro, y_centro, unidad, color):
+
+   area = area_estrella(radio)
+   perimetro = perimetro_estrella(radio)
+
+   fig = plt.figure()
+   ax = fig.add_subplot(111, projection='3d')
+   r_in = radio / 2
+   r_out = radio
    n_puntas = 5
    angulos = np.linspace(0, 2*np.pi, 2*n_puntas + 1)
-   puntos = []
+
+   x = []
+   y = []
+
    for i, angulo in enumerate(angulos):
-    radio = r_out if i % 2 == 0 else r_in
-    puntos.append([radio * np.cos(angulo), radio * np.sin(angulo)])
-   puntos = np.array(puntos)
-   x = puntos[:, 0]
-   y = puntos[:, 1]
-   z = np.zeros_like(x) # Estrella inicialmente plana
-   # Elevar el centro (o puntas) para dar efecto 3D
-   # Hacemos el centro (0,0) más alto
-   z = np.sqrt(x**2 + y**2) # Ejemplo: más alto en el centro
-   z = 1 - z # Invertir para que las puntas sean altas y el centro bajo
-   # Graficar la superficie
-   ax.plot_trisurf(x, y, z, color='gold', edgecolor='orange')
-   # Ajustar vista
-   ax.set_zlim(0, 1)
+       r = r_out if i % 2 == 0 else r_in
+       x.append(x_centro + r*np.cos(angulo))
+       y.append(y_centro + r*np.sin(angulo))
+   x = np.array(x)
+   y = np.array(y)
+   z = np.sqrt((x-x_centro)**2 + (y-y_centro)**2)
+   z = radio - z
+   ax.plot_trisurf(x, y, z, color=color,
+       label=f"Area≈{area:.1f} {unidad}²\nPerimetro≈{perimetro:.1f} {unidad}")
+   ax.set_xlabel(f"X ({unidad})")
+   ax.set_ylabel(f"Y ({unidad})")
+   ax.set_zlabel(f"Z ({unidad})")
+   ax.legend()
    plt.show()
 def menu():
    print("Menu figuras geometricas")
@@ -129,21 +177,49 @@ while True:
      break
     match opcion:
       case 1:
-         radio=float(input("Ingrese el radio del circulo: "))
+         unidad = input("Ingrese la unidad (cm, m, etc): ")
+         radio=float(input(f"Radio ({unidad}): "))
+         x_c=float(input(f"Centro X ({unidad})"))
+         y_c=float(input(f"Centro Y ({unidad})"))
          color=(input("Ingrese el color del circulo"))
-         hacer_circulo(radio,color)
+         hacer_circulo(radio, x_c, y_c, unidad, color)
       case 2:
-         lado=float(input("Ingrese el lado del cuadrado: "))
+         unidad = input("Ingrese la unidad de medida (cm, m, etc): ")
+         lado=float(input(f"Base ({unidad}): "))
+         x_ini= float(input(f"X inical ({unidad}): "))
+         y_ini=float(input(f"Y inicial ({unidad}): "))
          color=(input("Ingrese el color del cuadrado"))
-         hacer_cuadrado(lado,color)
+         hacer_cuadrado(lado, x_ini, y_ini, unidad, color)
       case 3:
-          hacer_pentagono
+          unidad = input("Ingrese la unidad de medida (cm, m, etc): ")
+          lado = float(input(f"Radio del pentagono ({unidad}): "))
+          x_centro = float(input(f"Centro X ({unidad}): "))
+          y_centro = float(input(f"Centro Y ({unidad}): "))
+          color=(input("Ingrese el color del pentagono"))
+          hacer_pentagono(lado, x_centro, y_centro, unidad, color)
       case 4:
-         hacer_rectangulo3d()
+         unidad = input("Ingrese la unidad de medida (cm, m, etc): ")
+         base=float(input(f"Base ({unidad}): "))
+         altura=float(input(f"Altura ({unidad}): "))
+         x_ini=float(input(f"X inicial ({unidad}): "))
+         y_ini=float(input(f"Y inicial ({unidad}): "))
+         color=input("Ingrese el color del rectangulo")
+         hacer_rectangulo3d(base, altura, x_ini, y_ini, unidad, color)
       case 5:
-         hacer_triangulo3d()
+         unidad = input("Ingrese la unidad de medida (cm, m, etc): ")
+         base=float(input(f"Base ({unidad}): "))
+         altura=float(input(f"Altura ({unidad}): "))
+         x_ini=float(input(f"X inicial ({unidad}): "))
+         y_ini=float(input(f"Y inicial ({unidad}): "))
+         color=input("Ingresa un color del triangulo")
+         hacer_triangulo3d(base, altura, x_ini, y_ini, unidad, color)
       case 6:
-          hacer_estrella3d()
+         unidad = input("Ingrese la unidad de medida (cm, m, etc): ")
+         radio = float(input(f"Radio ({unidad}): "))
+         x_centro = float(input(f"Centro X ({unidad}): "))
+         y_centro = float(input(f"Centro Y ({unidad}): "))
+         color = input("Color de la estrella: ")
+         hacer_estrella3d(radio, x_centro, y_centro, unidad, color)
       case 7:
          print("Finalizar programa")
          break
